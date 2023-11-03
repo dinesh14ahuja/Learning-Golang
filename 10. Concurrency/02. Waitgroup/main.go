@@ -17,6 +17,15 @@ func PrintName(s string, wg *sync.WaitGroup) {
 	wg.Done()
 }
 
+func PrintNumbers(i int, wg *sync.WaitGroup) {
+	defer wg.Done()
+
+	for j := 0; j < i; j++ {
+		fmt.Println(j)
+		time.Sleep(100)
+	}
+}
+
 func main() {
 
 	// Waitgroup is like an manager which manage the go routines
@@ -29,6 +38,10 @@ func main() {
 	go PrintName("Dinesh", &wg)
 	go PrintName("Gaurav", &wg)
 
+	//wg.Add(1)
+	// If we don't add waitgroup
+	// then the goroutines will work concurrently but while calling wg.wait it will check for 0 count only
+	go PrintNumbers(100, &wg)
 	// In the end we can call waitgroup.wait . This function will wait until all go routines are done
 	wg.Wait()
 	fmt.Println("Main thread")
